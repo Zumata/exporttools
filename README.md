@@ -5,7 +5,7 @@ Building blocks for quickly creating custom prometheus exporters.
 
 #### Getting Started
 
-1. Bootstrap your Exporter by creating a struct and embedding `*BaseExporter`. Your Exporter must satisfy the `Exporter` interface.
+##### 1. Bootstrap your Exporter by creating a struct and embedding `*BaseExporter`. Your Exporter must satisfy the `Exporter` interface.
 ```
 type Exporter interface {
 
@@ -23,16 +23,16 @@ type Exporter interface {
 }
 ```
 
-2. Implement methods the `Setup()` and `Close()` methods required by the Exporter interface to create/destroy infrastructure connections.
+##### 2. Implement methods the `Setup()` and `Close()` methods required by the Exporter interface to create/destroy infrastructure connections.
 
-3. For each group of metrics to be collected by the Exporter, satisfy the `MetricGroup` interface then add to your Exporter via `AddGroup()` provided by the `BaseExporter`, within your Exporter's `Setup()` method.
+##### 3. For each group of metrics to be collected by the Exporter, satisfy the `MetricGroup` interface then add to your Exporter via `AddGroup()` provided by the `BaseExporter`, within your Exporter's `Setup()` method.
 ```
 type MetricGroup interface {
 	Collect() ([]*Metric, error)
 }
 ```
 
-3. `Metrics` handle both counters and gauges
+##### 4. `Metrics` handle both counters and gauges
 ```
 type Metric struct {
 	Name        string
@@ -51,7 +51,7 @@ const (
 )
 ```
 
-4. Implement `prometheus.Collector` using the helpers:
+##### 5. Implement `prometheus.Collector` using the helpers:
 ```
 func (e *customExporter) Describe(ch chan<- *prometheus.Desc) {
 	exporttools.GenericDescribe(e.BaseExporter, ch)
@@ -62,7 +62,7 @@ func (e *customExporter) Collect(ch chan<- prometheus.Metric) {
 }
 ```
 
-5. Calling `Export(exporter)` will enable collection for all metric groups.
+##### 6. Calling `Export(exporter)` will enable collection for all metric groups.
 ```
 func main()
   exporter := postgres.NewCustomExporter()
